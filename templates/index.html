@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Study Bot</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <style>
+        body {
+            background: linear-gradient(135deg, #e3f2fd 0%, #fff 100%);
+            min-height: 100vh;
+        }
+
+        .chat-card {
+            max-width: 600px;
+            margin: 40px auto;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+        }
+
+        .bot-response {
+            background: #e7f3fe;
+            border-left: 4px solid #2196f3;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            line-height: 1.6;
+        }
+
+        /* Fix MathJax spacing issues */
+        .MathJax {
+            margin: 0.2em 0;
+        }
+
+        .MathJax_Display {
+            margin: 0.5em 0 !important;
+        }
+
+        /* Ensure proper spacing around math */
+        .bot-response p {
+            margin-bottom: 0.8rem;
+        }
+
+        .bot-response .math-block {
+            text-align: center;
+            margin: 1rem 0;
+        }
+    </style>
+    <!-- MathJax Configuration -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['\\(', '\\)'], ['$', '$']],
+                displayMath: [['\\[', '\\]'], ['$$', '$$']],
+                processEscapes: true,
+                processEnvironments: true,
+                tags: 'none'
+            },
+            options: {
+                skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+                ignoreHtmlClass: 'tex2jax_ignore',
+                processHtmlClass: 'tex2jax_process'
+            },
+            startup: {
+                ready() {
+                    MathJax.startup.defaultReady();
+                    console.log('MathJax is loaded and ready!');
+                }
+            }
+        };
+    </script>
+</head>
+
+<body>
+    <div class="container">
+        <div class="card chat-card">
+            <div class="card-body">
+                <h2 class="text-center text-primary mb-4">Ask your Study Buddy!</h2>
+                <form method="POST" enctype="multipart/form-data" class="mb-3">
+                    <div class="mb-3">
+                        <textarea name="chat" rows="3" class="form-control"
+                            placeholder="Type your question here..."></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="pdf" class="form-label">Upload PDF for context (optional):</label>
+                        <input class="form-control" type="file" id="pdf" name="pdf" accept="application/pdf">
+                    </div>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary btn-lg">Ask</button>
+                    </div>
+                </form>
+                {% if pdf_uploaded %}
+                <div class="alert alert-info mt-2">PDF uploaded and used for context!</div>
+                {% endif %}
+                {% if answer %}
+                <div class="bot-response mt-4 tex2jax_process">
+                    <h5 class="text-primary">Bot's Response:</h5>
+                    <div class="text-dark">{{ answer|safe }}</div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        // Function to re-render MathJax after content updates
+        function renderMath() {
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                MathJax.typesetPromise().then(() => {
+                    console.log('Math rendered successfully!');
+                }).catch((err) => {
+                    console.error('MathJax rendering error:', err);
+                });
+            }
+        }
+
+        // Render math on page load
+        window.addEventListener('load', () => {
+            setTimeout(renderMath, 500); // Small delay to ensure content is ready
+        });
+
+        // Also render math after form submission (if using AJAX in future)
+        document.addEventListener('DOMContentLoaded', () => {
+            if (document.querySelector('.bot-response')) {
+                setTimeout(renderMath, 300);
+            }
+        });
+    </script>
+</body>
+
+</html>
