@@ -57,6 +57,17 @@ python app.py
 **Check it out:**
 Go to http://127.0.0.1:5000 in your browser
 
+## Deploy to the Web
+
+Want to share this with the world? This project is ready for deployment on Render!
+
+**Quick Deploy:**
+1. Push your code to GitHub
+2. Go to [render.com](https://render.com) and connect your repo
+3. It'll automatically detect the configuration and deploy
+
+Check out `DEPLOYMENT.md` for detailed deployment instructions.
+
 ## How to Use This Thing
 
 ### Just Chatting
