@@ -7,7 +7,7 @@ from werkzeug.utils import secure_filename
 import re
 
 app = Flask(__name__)
-app.secret_key = os.environ.get('SECRET_KEY', 'studybot_secret_key_for_development')
+app.secret_key = 'studybot_secret_key'
 UPLOAD_FOLDER = 'uploads'
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -47,10 +47,6 @@ def process_math_expressions(text):
     text = re.sub(r'\$\$(.*?)\$\$', r'<div class="math-block">$$\1$$</div>', text, flags=re.DOTALL)
     
     return text
-
-@app.route("/health")
-def health_check():
-    return {"status": "healthy", "message": "Study AI Bot is running!"}, 200
 
 @app.route("/", methods=["GET", "POST"])
 def index():
@@ -105,5 +101,4 @@ def index():
     return render_template('index.html', answer=answer, pdf_uploaded=pdf_uploaded)
 
 if __name__ == "__main__":
-    port = int(os.environ.get('PORT', 5000))
-    app.run(host='0.0.0.0', port=port, debug=False)
+    app.run(debug=True)
